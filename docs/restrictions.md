@@ -105,7 +105,11 @@ The compiler may reuse the storage occupied by `local_array` after its last use.
 
 ## Dynamic Polymorphism
 
+**coming soon**
+
 ## Conditionals
+
+**coming soon**
 
 ## Memory Accessibility
 
@@ -195,4 +199,8 @@ This can help maintain consistent behavior across architectures with shared and 
 
 ## Reference semantics
 
+**coming soon**
+
 ## Parallel execution in arbitrary sequence
+
+**coming soon**
