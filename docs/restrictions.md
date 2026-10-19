@@ -45,12 +45,97 @@ Thus in the context of performance portability, it is mandatory to have all thre
 
 ## Allocation of memory
 
+
 ## Dynamic Polymorphism
 
 ## Conditionals
 
-## Memory access
+## Memory Accessibility
+
+In heterogeneous programming, processors often have dedicated random-access memory (RAM).
+Although features such as [HMM](https://www.kernel.org/doc/html/v5.1/vm/hmm.html) can allow certain GPUs to access CPU memory, that behavior is not guaranteed across architectures.
+It is therefore useful to treat memory associated with different processors as distinct memory types.
+
+This introduces an important restriction: **memory movement may need to be managed explicitly**. Consider the following example:
+
+```cpp
+void kernel(int* data)
+{
+    // Do work with data.
+}
+
+int main()
+{
+    const unsigned N = 10;
+    int* data = nullptr;
+    allocate_memory(&data, N);
+
+    // We want to do this on the CPU.
+    for (unsigned i = 0; i < N; ++i)
+    {
+        data[i] = /* read from file */;
+    }
+
+    // We want to do this on the GPU.
+    kernel(data);
+    // Wait for the GPU to finish the computation.
+
+    // We want to do this on the CPU.
+    for (unsigned i = 0; i < N; ++i)
+    {
+        // Write to file.
+    }
+}
+```
+
+This may work on accelerators (and CPUs) that can access the memory in which `data` was allocated. It may fail, however, on architectures that do not provide automatic memory management or access to that memory.
+
+Furthermore, if the code does not explicitly express where data should be copied from CPU memory to GPU memory, and back again, it can be harder to reason about what the code is doing.
+
+Compare that with a version that uses separate pointers for CPU and GPU memory and shows when data is copied between them:
+
+```cpp
+void kernel(int* data)
+{
+    // Do work with data.
+}
+
+int main()
+{
+    const unsigned N = 10;
+
+    int* cpu_data = nullptr;
+    allocate_cpu_memory(&cpu_data, N);
+
+    int* gpu_data = nullptr;
+    allocate_gpu_memory(&gpu_data, N);
+
+    // We want to do this on the CPU.
+    for (unsigned i = 0; i < N; ++i)
+    {
+        cpu_data[i] = /* read from file */;
+    }
+
+    copy(gpu_data, cpu_data); // Destination, source.
+
+    // We want to do this on the GPU.
+    kernel(gpu_data);
+    // Wait for the GPU to finish the computation.
+
+    copy(cpu_data, gpu_data); // Destination, source.
+
+    // We want to do this on the CPU.
+    for (unsigned i = 0; i < N; ++i)
+    {
+        // Write to file.
+    }
+}
+```
+
+In this version, it is clear when data is moved between memory spaces.
+It also makes it possible to specify whether a `copy` operation always transfers the data or transfers it only when needed.
+This can help maintain consistent behavior across architectures with shared and non-shared memory.
 
 ## Reference semantics
 
-## Parallel execution without sequence
+## Parallel execution in arbitrary sequence
