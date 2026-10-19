@@ -13,7 +13,7 @@
 
 #include <iostream>
 
-// TODO write deduction guides for processsors and generators
+// TODO write deduction guides for processors and generators
 
 ///////////////////Helper function
 template <typename MemorySpace, typename ExecutionSpace, typename Generator,

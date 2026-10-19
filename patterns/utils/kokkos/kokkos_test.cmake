@@ -1,6 +1,6 @@
 function(PerformancePortablePatterns_add_kokkos_test ROOT_NAME)
   cmake_parse_arguments(PARSE "" "" "HEADERS;INCLUDE_HEADERS;ARGS" ${ARGN})
-  verify_empty(PerfomancePortablePatterns_add_kokkos_test
+  verify_empty(PerformancePortablePatterns_add_kokkos_test
                ${PARSE_UNPARSED_ARGUMENTS})
 
   set(Test_harness
@@ -19,10 +19,10 @@ function(PerformancePortablePatterns_add_kokkos_test ROOT_NAME)
           UnitTest_PerformancePortablePatterns_${ROOT_NAME}_${_uppercase_device}
       )
       set(_file ${_dir}/${TEST_NAME}.cpp)
-      set(Cathegory_file
+      set(Category_file
           ${CMAKE_SOURCE_DIR}/patterns/utils/kokkos/Test${_device}_Category.hpp)
       string(REPLACE ";" " " header_includes "${header_includes}")
-      file(WRITE ${_file} "#include \"${Cathegory_file}\"\n
+      file(WRITE ${_file} "#include \"${Category_file}\"\n
         ${header_includes}\n")
 
       # set_source_files_properties(${_file} PROPERTIES LANGUAGE
@@ -38,7 +38,7 @@ function(PerformancePortablePatterns_add_kokkos_test ROOT_NAME)
           FILES
           ${PARSE_INCLUDE_HEADERS}
           ${PARSE_HEADERS}
-          ${Cathegory_file})
+          ${Category_file})
       target_link_libraries(${TEST_NAME} PRIVATE Kokkos::kokkos GTest::gtest)
       # We noticed problems with -fvisibility=hidden for inline static variables
       # if Kokkos was built as shared library.
