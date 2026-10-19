@@ -43,8 +43,65 @@ This essentially leads to a deadlock as the thread that acquired the lock can no
 
 Thus in the context of performance portability, it is mandatory to have all threads of a group enter and exit the while loop together.
 
-## Allocation of memory
+## Allocation of Memory
 
+In general, not all processors in a heterogeneous computing system can allocate dynamic memory inside a kernel.
+
+Dynamic memory allocation means requesting memory at runtime. The memory may be in system RAM, high-bandwidth memory (HBM), or another memory space. It does not have to be physically located on the machine; it may also be accessed over a network. Even when memory is physically located on an accelerator, the accelerator may not be able to allocate from it while a kernel is running.
+
+Consider this pseudocode example:
+
+```cpp
+void kernel(unsigned N)
+{
+    int* gpu_data = nullptr;
+    allocate_device_memory(&gpu_data, N); // Device-side allocation may not be supported.
+}
+
+int main()
+{
+    const unsigned N = 10;
+
+    int* cpu_data = nullptr;
+    allocate_host_memory(&cpu_data, N); // Host-side allocation is generally available.
+
+    // Launch the kernel on the GPU.
+    kernel(N);
+}
+```
+
+The allocation inside `kernel` is not portable to accelerators that do not support dynamic allocation from device code. The allocation functions and kernel-launch syntax here are illustrative; actual APIs vary by programming model.
+
+By contrast, kernels commonly support local variables and fixed-size local arrays:
+
+```cpp
+void kernel()
+{
+    double local_array[3]; // A fixed-size local array.
+}
+```
+
+The array’s size must be known at compile time in languages such as C++. However, this does not necessarily mean the array occupies fast on-chip memory. Depending on the compiler and hardware, it may use registers or local memory, which can be backed by device memory.
+
+Using many local variables or large arrays can reduce performance. For example, the resource use per thread may limit how many threads can run at once.
+
+Compilers can sometimes reuse storage for local variables whose values are no longer needed. For example:
+
+```cpp
+void kernel()
+{
+    double local_array[2];
+    // Fill local_array.
+
+    double squared_magnitude =
+        local_array[0] * local_array[0] +
+        local_array[1] * local_array[1];
+
+    // If local_array is not used again, its storage may be reused.
+}
+```
+
+The compiler may reuse the storage occupied by `local_array` after its last use. This is an optimization, however, and whether it happens depends on the compiler, the selected optimization settings, and the code.
 
 ## Dynamic Polymorphism
 
