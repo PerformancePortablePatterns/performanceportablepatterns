@@ -52,7 +52,7 @@ nav = [
   { "How the patterns are presented" = "presentation.md" },
   { "Contributing" = "contributing.md" },
   { "Patterns" = [
-     "patterns/generator_processor_pattern.md",
+     "patterns/generator_processor_scan.md",
      "patterns/union_hide_pattern.md",
      "patterns/memory_pool_pattern.md"
   ] },

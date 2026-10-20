@@ -1,0 +1,61 @@
+\documentclass[tikz,border=2pt]{standalone}
+
+\usepackage{import}
+\import{./}{preamble.tex}
+
+\begin{document}
+
+\begin{tikzpicture}[
+            % Style for the boxes
+    box/.style={
+        draw,
+        rectangle,
+        minimum width=2cm,
+        minimum height=0.8cm,
+        thick,
+        font=\sffamily\small
+    },
+    % Style for the arrows
+    arrow_right/.style={
+        -{Stealth[scale=1.2]},
+        thick,
+        shorten >=2pt,
+        shorten <=2pt
+    },
+    arrow_left/.style={
+        {Stealth[scale=1.2]}-,
+        thick,
+        shorten >=2pt,
+        shorten <=2pt
+    },
+    thick_solid_line/.style={
+        |-|,
+        thick,
+        %shorten >=2pt,
+        %shorten <=2pt
+    },
+    dashed_solid_line/.style={
+        |-|,
+        thick,
+        dashed,
+        %shorten >=2pt,
+        %shorten <=2pt
+    },
+    % Positioning distance
+    node distance=0.1cm
+        ]
+
+    % 1. Define the four boxes
+    \node[box, text width=5cm,align=center] (B1) {\textcolor{ornl_green}{Generator g} \\ \textcolor{snl_blue}{Processor p} \\ Range r};
+    \node[box, below=of B1, text width=5cm,align=center] (B2) {Scan over Range r};
+
+    \node[box, below=of B2,text width=4.5cm,align=center, xshift=0.25cm] (B3) {\textbf{\textcolor{ornl_green}{num}}=g.num\_elt(\textbf{\textcolor{ornl_green}{index}})};
+    \node[box, below=of B3,text width=4.5cm,align=center] (B4) {if(final\_pass\&p.has\_space()) \\ for (\textbf{n} in \textbf{\textcolor{ornl_green}{num}}) \\ p(\underline{\textbf{\textcolor{snl_blue}{total}+n}},g(\underline{\textbf{\textcolor{ornl_green}{index},n}}))};
+    \node[box, below=of B4,text width=4.5cm,align=center] (B5) {\textbf{\textcolor{snl_blue}{total}}+=\textbf{\textcolor{ornl_green}{num}}};
+    \node[box, below=of B5,text width=5cm,align=center,xshift=-0.25cm] (B6) {p.expand(\textbf{\textcolor{snl_blue}{total}})};
+
+
+
+    \draw[arrow_right] (B6.west) -- ++(-1,0) -- ++(0,4.25) node[midway, above, font=\sffamily\small, rotate=90] {all elements inserted?} -- (B2.west);
+\end{tikzpicture}
+\end{document}
