@@ -22,7 +22,7 @@ The scan operation take a binary operator $\odot$ with identity I, and an ordere
 
 For $\odot=+$ this gives for element $i$:
 $$
-a_i = I + \sum_{k=0}^{i} a_k
+e_i = I + \sum_{k=0}^{i+1} a_k
 $$
 
 
