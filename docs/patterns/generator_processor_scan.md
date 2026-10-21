@@ -73,7 +73,7 @@ for (auto i = start; i < end; ++i)
 
 Although this works on CPUs, `push_back` may need to allocate memory if the vector does not have enough capacity. This approach is not portable because many accelerators do not allow memory allocation in kernels; see [Restrictions](../restrictions.md#allocation-of-memory).
 
-Even without the memory-allocation issue, the `for` loop cannot be ported directly to an accelerator. Parallel execution on accelerators does not guarantee a particular sequence of operations, as described in [Restrictions](../restrictions.md#parallel-execution-without-sequence).
+Even without the memory-allocation issue, the `for` loop cannot be ported directly to an accelerator. Parallel execution on accelerators does not guarantee a particular sequence of operations, as described in [Restrictions](../restrictions.md#parallel-execution-in-arbitrary-sequence).
 
 To introduce the pattern, suppose we have an `accessible_vector` that is large enough to store all the elements we want to insert. We can then use a parallel scan to calculate each element's insertion position and generate and insert the elements in parallel (again, in pseudocode):
 
