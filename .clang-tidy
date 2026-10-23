@@ -1,0 +1,2 @@
+FormatStyle: file
+HeaderFilterRegex: '(_deps).*\.hpp'
