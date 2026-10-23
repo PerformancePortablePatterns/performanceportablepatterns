@@ -40,6 +40,9 @@ function(PerformancePortablePatterns_add_kokkos_test ROOT_NAME)
           ${PARSE_HEADERS}
           ${Category_file})
       target_link_libraries(${TEST_NAME} PRIVATE Kokkos::kokkos GTest::gtest)
+      set_target_properties(
+        ${TEST_NAME} PROPERTIES CXX_CLANG_TIDY
+                                "clang-tidy;-warnings-as-errors=*")
       # We noticed problems with -fvisibility=hidden for inline static variables
       # if Kokkos was built as shared library.
       if(BUILD_SHARED_LIBS AND NOT ${TEST_NAME}_DISABLE)
