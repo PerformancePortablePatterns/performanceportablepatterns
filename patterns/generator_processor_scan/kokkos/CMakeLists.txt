@@ -27,3 +27,6 @@ target_sources(
           ppp_generator_processor_scan.hpp
           ppp_ref_cub)
 target_link_libraries(generator_processor_PerfTest Kokkos::kokkos)
+set_target_properties(
+  generator_processor_PerfTest PROPERTIES CXX_CLANG_TIDY
+                                          "clang-tidy;-warnings-as-errors=*")
