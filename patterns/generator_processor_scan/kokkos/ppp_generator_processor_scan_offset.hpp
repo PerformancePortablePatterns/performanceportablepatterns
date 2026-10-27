@@ -51,7 +51,7 @@ void generator_processor_scan_offset(ExecutionSpace const &exec_space,
               // failed_index(1) = current_processor_index +
               // num_elements_at_current_generator_index;
               // }
-              for (auto element = 0;
+              for (IndexingType element = 0;
                    element < num_elements_at_current_generator_index; ++element)
                 processor(current_processor_index + element,
                           generator(current_generator_index, element));
@@ -81,7 +81,7 @@ void generator_processor_scan_offset(ExecutionSpace const &exec_space,
           auto num_elements_at_current_generator_index =
               generator.number_of_elements_for_index(current_generator_index);
 
-          for (auto element = 0;
+          for (IndexingType element = 0;
                element < num_elements_at_current_generator_index; ++element)
             processor(offset[current_generator_index - generator_start_index] +
                           element,

@@ -18,13 +18,13 @@
 
 ///////////////////Helper function
 template <typename MemorySpace, typename ExecutionSpace, typename Generator,
-          typename IndexType>
+          typename IndexingType>
 void test_generator_processor_algo(
     void (*funcptr)(ExecutionSpace const &, Generator const &,
                     PPP::Test::IdentityInsertingProcessor<
                         typename Generator::ElementType, MemorySpace> &),
     ExecutionSpace const &exec_space, Generator const &generator,
-    IndexType size_prealloc) {
+    IndexingType size_prealloc) {
   using ElementType = typename Generator::ElementType;
 
   PPP::Test::IdentityInsertingProcessor<ElementType, MemorySpace> processor{
@@ -44,14 +44,14 @@ void test_generator_processor_algo(
 }
 
 template <typename MemorySpace, typename ExecutionSpace, typename Generator,
-          typename OffsetType, typename IndexType>
+          typename OffsetType, typename IndexingType>
 void test_generator_processor_offset_algo(
     void (*funcptr)(ExecutionSpace const &, Generator const &,
                     PPP::Test::IdentityInsertingProcessor<
                         typename Generator::ElementType, MemorySpace> &,
                     OffsetType &),
     ExecutionSpace const &exec_space, Generator const &generator,
-    OffsetType &offset, IndexType size_prealloc) {
+    OffsetType &offset, IndexingType size_prealloc) {
   using ElementType = typename Generator::ElementType;
 
   PPP::Test::IdentityInsertingProcessor<ElementType, MemorySpace> processor{
@@ -75,7 +75,7 @@ void test_generator_processor_offset_algo(
 }
 
 TEST(TEST_CATEGORY, generator_processor_scan) {
-  using IndexingType                            = int;
+  using IndexingType                            = long unsigned int;
   std::array<IndexingType, 4> start_index_set   = {0, 2, 100, 39'998};
   std::array<IndexingType, 4> end_index_set     = {1, 40'000, 20'000, 40'000};
   std::array<IndexingType, 3> size_prealloc_set = {1, 20'000, 50'000};
@@ -85,10 +85,10 @@ TEST(TEST_CATEGORY, generator_processor_scan) {
   using memory_space = TEST_EXECSPACE::memory_space;
   auto exec_space    = TEST_EXECSPACE{};
 
-  for (int i = 0; i < start_index_set.size(); ++i) {
+  for (IndexingType i = 0; i < start_index_set.size(); ++i) {
     auto start_index = start_index_set[i];
     auto end_index   = end_index_set[i];
-    for (auto size_prealloc : size_prealloc_set) {
+    for (IndexingType size_prealloc : size_prealloc_set) {
       PPP::Test::ModuloNGenerator<IndexingType, ElementType, N>
           modulo_generator{start_index, end_index};
 
@@ -124,7 +124,7 @@ TEST(TEST_CATEGORY, generator_processor_scan) {
 }
 
 TEST(TEST_CATEGORY, generator_processor_offset_scan) {
-  using IndexingType                            = int;
+  using IndexingType                            = long unsigned int;
   std::array<IndexingType, 4> start_index_set   = {0, 2, 100, 39'998};
   std::array<IndexingType, 4> end_index_set     = {1, 40'000, 20'000, 40'000};
   std::array<IndexingType, 3> size_prealloc_set = {1, 20'000, 50'000};
@@ -133,10 +133,10 @@ TEST(TEST_CATEGORY, generator_processor_offset_scan) {
   using memory_space = TEST_EXECSPACE::memory_space;
   auto exec_space    = TEST_EXECSPACE{};
 
-  for (int i = 0; i < start_index_set.size(); ++i) {
+  for (IndexingType i = 0; i < start_index_set.size(); ++i) {
     auto start_index = start_index_set[i];
     auto end_index   = end_index_set[i];
-    for (auto size_prealloc : size_prealloc_set) {
+    for (IndexingType size_prealloc : size_prealloc_set) {
       PPP::Test::ModuloNGenerator<IndexingType, ElementType, N>
           modulo_generator{start_index, end_index};
       Kokkos::View<IndexingType *, memory_space> offset(

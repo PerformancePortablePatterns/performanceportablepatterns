@@ -43,9 +43,9 @@ void serial_ElementPair_check(HostElementView const &processed_elements_host,
                               Generator const &generator) {
   using IndexingType                  = typename Generator::IndexingType;
   IndexingType processor_index_offset = 0;
-  for (auto generator_index = generator.start_index();
+  for (IndexingType generator_index = generator.start_index();
        generator_index < generator.end_index(); ++generator_index) {
-    for (auto element_index = 0;
+    for (IndexingType element_index = 0;
          element_index <
          generator.number_of_elements_for_index(generator_index);
          ++element_index) {
@@ -73,7 +73,7 @@ template <typename Generator, typename OffsetType>
 void serial_offset_check(Generator const &generator, OffsetType const &offset) {
   using IndexingType                  = typename Generator::IndexingType;
   IndexingType processor_index_offset = 0;
-  for (auto generator_index = generator.start_index();
+  for (IndexingType generator_index = generator.start_index();
        generator_index < generator.end_index(); ++generator_index) {
     EXPECT_EQ(processor_index_offset,
               offset(generator_index - generator.start_index()))
