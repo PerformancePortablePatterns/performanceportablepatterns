@@ -30,7 +30,7 @@ jobs:
           cmake_args=(
             -S .
             -B builddir
-            -D Kokkos_ENABLE_${{matrix.kokkos_backend}}=ON"
+            -D Kokkos_ENABLE_${{matrix.kokkos_backend}}=ON
             -D Kokkos_ENABLE_COMPILER_WARNINGS=ON
             -D CMAKE_CXX_FLAGS=-Werror
             -D CMAKE_CXX_STANDARD=${{ matrix.stdcxx}}
