@@ -1,0 +1,34 @@
+workflow:
+  auto_cancel:
+    on_new_commit: interruptible
+  rules:
+    # Do not auto-cancel pipelines on main
+    - if: $CI_COMMIT_BRANCH == "main"
+      auto_cancel:
+        on_new_commit: none
+    - when: always
+
+.common-setup:
+  stage: test
+  variables:
+    OMP_NUM_THREADS: "8"
+    OMP_PLACES: "cores"
+    OMP_PROC_BIND: "close"
+
+NVIDIA-RTX5080:
+  extends: .common-setup
+  tags: [nvidia-rtx5080, hpsf-gpu]
+  image: nvcr.io/nvidia/cuda:13.3.0-devel-ubuntu26.04
+  script:
+    - apt-get update && apt-get install -y cmake git python3
+    - export CMAKE_BUILD_PARALLEL_LEVEL=32
+    - >
+      cmake -S . -B build
+      -DCMAKE_BUILD_TYPE="${BUILD_TYPE:-Release}"
+      -DCMAKE_CXX_FLAGS="-Wall -Werror"
+      -DCMAKE_CXX_STANDARD=20
+      -DKokkos_ARCH_BLACKWELL120=ON
+      -DKokkos_ENABLE_CUDA=ON
+      -DKokkos_ENABLE_COMPILER_WARNINGS=ON
+    - cmake --build build
+    - ctest --test-dir build --output-on-failure
