@@ -85,10 +85,10 @@ TEST(TEST_CATEGORY, generator_processor_scan) {
   using memory_space = TEST_EXECSPACE::memory_space;
   auto exec_space    = TEST_EXECSPACE{};
 
-  for (auto i = 0; i < start_index_set.size(); ++i) {
+  for (IndexType i = 0; i < start_index_set.size(); ++i) {
     auto start_index = start_index_set[i];
     auto end_index   = end_index_set[i];
-    for (auto size_prealloc : size_prealloc_set) {
+    for (IndexType size_prealloc : size_prealloc_set) {
       PPP::Test::ModuloNGenerator<IndexingType, ElementType, N>
           modulo_generator{start_index, end_index};
 
@@ -133,10 +133,10 @@ TEST(TEST_CATEGORY, generator_processor_offset_scan) {
   using memory_space = TEST_EXECSPACE::memory_space;
   auto exec_space    = TEST_EXECSPACE{};
 
-  for (auto i = 0; i < start_index_set.size(); ++i) {
+  for (IndexingType i = 0; i < start_index_set.size(); ++i) {
     auto start_index = start_index_set[i];
     auto end_index   = end_index_set[i];
-    for (auto size_prealloc : size_prealloc_set) {
+    for (IndexingType size_prealloc : size_prealloc_set) {
       PPP::Test::ModuloNGenerator<IndexingType, ElementType, N>
           modulo_generator{start_index, end_index};
       Kokkos::View<IndexingType *, memory_space> offset(
