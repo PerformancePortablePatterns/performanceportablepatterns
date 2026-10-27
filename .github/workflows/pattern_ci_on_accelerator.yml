@@ -7,18 +7,19 @@ on:
   pull_request:
 
 jobs:
-  name: Trigger and monitor Gitlab CI
-  runs-on: ubuntu-latest
-  steps:
-    - name: Trigger accelerator builds
-      uses: digital-blueprint/gitlab-pipeline-trigger@v1.4.3
-      with:
-        host: 'https://gitlab.spack.io'
-        id: ${{ secrets.GITLAB_PROJECT_ID }}
-        ref: ${{ github.ref_name }}
-        trigger_token: ${{ secrets.GITLAB_TRIGGER_TOKEN }}
-        access_token: ${{ secrets.GITLAB_CI_READ_TOKEN}}
+  Code_CI:
+    name: Trigger and monitor Gitlab CI
+    runs-on: ubuntu-latest
+    steps:
+      - name: Trigger accelerator builds
+        uses: digital-blueprint/gitlab-pipeline-trigger@v1.4.3
+        with:
+          host: 'https://gitlab.spack.io'
+          id: ${{ secrets.GITLAB_PROJECT_ID }}
+          ref: ${{ github.ref_name }}
+          trigger_token: ${{ secrets.GITLAB_TRIGGER_TOKEN }}
+          access_token: ${{ secrets.GITLAB_CI_READ_TOKEN}}
 
-        # Polling & Artifact behavior
-        download_job_logs: 'true'  # Downloads raw console output text files for all jobs
-        download_path: './gitlab-outputs' # The local directory on the GitHub runner to save files to
+          # Polling & Artifact behavior
+          download_job_logs: 'true'  # Downloads raw console output text files for all jobs
+          download_path: './gitlab-outputs' # The local directory on the GitHub runner to save files to
