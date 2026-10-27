@@ -14,9 +14,9 @@ jobs:
       - name: Trigger accelerator builds
         uses: digital-blueprint/gitlab-pipeline-trigger-action@v1
         with:
-          host: 'https://gitlab.spack.io'
+          host: 'gitlab.spack.io'
           id: ${{ secrets.GITLAB_PROJECT_ID }}
-          ref: ${{ github.ref_name }}
+          ref: ${{ github.head_ref }}
           trigger_token: ${{ secrets.GITLAB_TRIGGER_TOKEN }}
           access_token: ${{ secrets.GITLAB_CI_READ_TOKEN}}
 
