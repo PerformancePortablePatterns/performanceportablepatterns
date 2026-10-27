@@ -12,7 +12,7 @@ jobs:
     runs-on: ubuntu-latest
     steps:
       - name: Trigger accelerator builds
-        uses: digital-blueprint/gitlab-pipeline-trigger@v1.4.3
+        uses: digital-blueprint/gitlab-pipeline-trigger-action@v1
         with:
           host: 'https://gitlab.spack.io'
           id: ${{ secrets.GITLAB_PROJECT_ID }}
