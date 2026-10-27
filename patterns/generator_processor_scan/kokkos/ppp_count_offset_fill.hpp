@@ -44,7 +44,7 @@ void count_offset_fill(ExecutionSpace const &exec_space,
       KOKKOS_LAMBDA(IndexingType i) {
         auto count    = generator.number_of_elements_for_index(i);
         auto offset_i = offset[i - generator_start_index];
-        for (auto element = 0; element < count; ++element)
+        for (IndexingType element = 0; element < count; ++element)
           processor(offset_i + element, generator(i, element));
       });
   exec_space.fence("End fence of count_offset_fill");
@@ -74,7 +74,7 @@ void countfill_offset_fill(ExecutionSpace exec_space,
               current_processor_index;
           if (count != 0 && processor.can_insert_element_at_index(
                                 current_processor_index + count)) {
-            for (auto element = 0; element < count; ++element)
+            for (IndexingType element = 0; element < count; ++element)
               processor(current_processor_index + element,
                         generator(current_generator_index, element));
           }
@@ -109,7 +109,7 @@ void countfill_offset_fill(ExecutionSpace exec_space,
       KOKKOS_LAMBDA(IndexingType i) {
         auto count    = generator.number_of_elements_for_index(i);
         auto offset_i = offset[i - generator_start_index];
-        for (auto element = 0; element < count; ++element)
+        for (IndexingType element = 0; element < count; ++element)
           processor(offset_i + element, generator(i, element));
       });
   exec_space.fence("End fence of countfill_offset_fill");

@@ -92,7 +92,7 @@ int main(int argc, char *argv[]) {
     // generator, time\n";
 
     double time = std::nan("1");
-    for (auto rep = 0; rep < num_rep; ++rep) {
+    for (std::uint64_t rep = 0; rep < num_rep; ++rep) {
       {
         Kokkos::View<IndexType *, memory_space> offset(
             Kokkos::view_alloc(exec_space, Kokkos::WithoutInitializing,
