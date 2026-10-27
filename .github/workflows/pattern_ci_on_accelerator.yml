@@ -23,3 +23,4 @@ jobs:
           # Polling & Artifact behavior
           download_job_logs: 'true'  # Downloads raw console output text files for all jobs
           download_path: './gitlab-outputs' # The local directory on the GitHub runner to save files to
+          verbose: 'true'
