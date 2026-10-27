@@ -28,8 +28,6 @@ NVIDIA-RTX5080:
       -DCMAKE_CXX_STANDARD=20
       -DKokkos_ARCH_BLACKWELL120=ON
       -DKokkos_ENABLE_CUDA=ON
-      -DKokkos_ENABLE_SERIAL=ON
-      -DKokkos_ENABLE_OPENMP=ON
       -DKokkos_ENABLE_COMPILER_WARNINGS=ON
     - cmake --build build
     - ctest --test-dir build --output-on-failure
