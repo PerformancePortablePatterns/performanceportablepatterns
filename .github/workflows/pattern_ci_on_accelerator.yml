@@ -19,10 +19,8 @@ jobs:
           project_id: '115'
           wait: true
           interval: 60s
-
           ref: ${{ github.ref_name }}
-          trigger_token: ${{ secrets.GITLAB_TRIGGER_TOKEN }}
-          access_token: ${{ secrets.GITLAB_CI_READ_TOKEN }}
+          token: ${{ secrets.GITLAB_TRIGGER_TOKEN }}
 
       - name: print output
         run: |
