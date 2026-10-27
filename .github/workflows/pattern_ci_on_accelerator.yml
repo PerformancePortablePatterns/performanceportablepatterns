@@ -12,7 +12,7 @@ jobs:
     runs-on: ubuntu-latest
     steps:
       - name: Trigger accelerator builds
-        uses: ghcr.io/appleboy/gitlab-ci-action@v1.3.0
+        uses: appleboy/gitlab-ci-action@v1.3.0
         id: trigger
         with:
           host: 'https://gitlab.spack.io'
