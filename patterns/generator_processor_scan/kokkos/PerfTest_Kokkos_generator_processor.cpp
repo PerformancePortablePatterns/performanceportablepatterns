@@ -17,13 +17,13 @@
 
 ///////////////////Helper function
 template <typename MemorySpace, typename ExecutionSpace, typename Generator,
-          typename IndexType>
+          typename IndexingType>
 double time_generator_processor_algo(
     void (*funcptr)(ExecutionSpace const &, Generator const &,
                     PPP::Test::IdentityInsertingProcessor<
                         typename Generator::ElementType, MemorySpace> &),
     ExecutionSpace const &exec_space, Generator const &generator,
-    IndexType size_prealloc) {
+    IndexingType size_prealloc) {
   using ElementType = typename Generator::ElementType;
 
   PPP::Test::IdentityInsertingProcessor<ElementType, MemorySpace> processor{
@@ -41,14 +41,14 @@ double time_generator_processor_algo(
 }
 
 template <typename MemorySpace, typename ExecutionSpace, typename Generator,
-          typename OffsetType, typename IndexType>
+          typename OffsetType, typename IndexingType>
 double time_generator_processor_offset_algo(
     void (*funcptr)(ExecutionSpace const &, Generator const &,
                     PPP::Test::IdentityInsertingProcessor<
                         typename Generator::ElementType, MemorySpace> &,
                     OffsetType &),
     ExecutionSpace const &exec_space, Generator const &generator,
-    OffsetType &offset, IndexType size_prealloc) {
+    OffsetType &offset, IndexingType size_prealloc) {
   using ElementType = typename Generator::ElementType;
 
   PPP::Test::IdentityInsertingProcessor<ElementType, MemorySpace> processor{
@@ -75,16 +75,16 @@ int main(int argc, char *argv[]) {
       return 0;
     }
 
-    using IndexType         = std::uint64_t;
-    IndexType start_index   = std::stoull(argv[1]);
-    IndexType end_index     = std::stoull(argv[2]);
-    IndexType size_prealloc = std::stoull(argv[3]);
-    IndexType num_rep       = std::stoull(argv[4]);
-    IndexType algo          = std::stoull(argv[5]);
-    IndexType generator     = std::stoull(argv[6]);
+    using IndexingType         = std::uint64_t;
+    IndexingType start_index   = std::stoull(argv[1]);
+    IndexingType end_index     = std::stoull(argv[2]);
+    IndexingType size_prealloc = std::stoull(argv[3]);
+    IndexingType num_rep       = std::stoull(argv[4]);
+    IndexingType algo          = std::stoull(argv[5]);
+    IndexingType generator     = std::stoull(argv[6]);
 
     static const unsigned N = 5;
-    using ElementType       = PPP::Test::ElementPair<IndexType>;
+    using ElementType       = PPP::Test::ElementPair<IndexingType>;
     using memory_space      = Kokkos::DefaultExecutionSpace::memory_space;
     auto exec_space         = Kokkos::DefaultExecutionSpace{};
 
@@ -94,16 +94,16 @@ int main(int argc, char *argv[]) {
     double time = std::nan("1");
     for (std::uint64_t rep = 0; rep < num_rep; ++rep) {
       {
-        Kokkos::View<IndexType *, memory_space> offset(
+        Kokkos::View<IndexingType *, memory_space> offset(
             Kokkos::view_alloc(exec_space, Kokkos::WithoutInitializing,
                                "offset"),
             end_index - start_index);
 
-        PPP::Test::ModuloNGenerator<IndexType, ElementType, N> modulo_generator{
-            start_index, end_index};
+        PPP::Test::ModuloNGenerator<IndexingType, ElementType, N>
+            modulo_generator{start_index, end_index};
 
         Kokkos::Random_XorShift64_Pool<> rand_pool(183291);
-        Kokkos::View<IndexType *, memory_space> random_indices(
+        Kokkos::View<IndexingType *, memory_space> random_indices(
             Kokkos::view_alloc(exec_space, Kokkos::WithoutInitializing,
                                "random_indices"),
             end_index / 2);
@@ -116,7 +116,7 @@ int main(int argc, char *argv[]) {
 
         Kokkos::deep_copy(exec_space, offset, 0);
 
-        PPP::Test::RandomIndexAccessGenerator<IndexType, ElementType, N,
+        PPP::Test::RandomIndexAccessGenerator<IndexingType, ElementType, N,
                                               memory_space>
             random_generator{
                 random_indices,
