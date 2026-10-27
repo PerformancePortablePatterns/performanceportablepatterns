@@ -22,7 +22,7 @@ struct ModuloNGenerator {
 
   KOKKOS_FUNCTION IndexingType
   number_of_elements_for_index(IndexingType i) const {
-    IndexType ret = i % N == 0 ? N : 0;
+    IndexingType ret = i % N == 0 ? N : 0;
     return ret;  // Example: varying number of elements based on index
   }
 
