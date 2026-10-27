@@ -1,0 +1,20 @@
+name: Pattern CI on accelerator
+
+on:
+  push:
+    branches:
+      - main
+  pull_request:
+
+jobs:
+  deploy:
+    runs-on: ubuntu-latest
+    steps:
+      - name: Fire API Event
+        uses: digital-blueprint/gitlab-pipeline-trigger@v1
+        with:
+          host: 'https://gitlab.spack.io'
+          id: '115'
+          ref: ${{ github.ref_name }}
+          trigger_token: ${{ secrets.GITLAB_TRIGGER_TOKEN }}
+          access_token: ${{ secrets.GITLAB_CI_READ_TOKEN }}
