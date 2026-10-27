@@ -15,9 +15,9 @@ workflow:
     OMP_PLACES: "cores"
     OMP_PROC_BIND: "close"
 
-NVIDIA-RTX5080:
+NVIDIA-GH200:
   extends: .common-setup
-  tags: [nvidia-rtx5080, hpsf-gpu]
+  tags: [nvidia-gh200]
   image: nvcr.io/nvidia/cuda:13.3.0-devel-ubuntu26.04
   script:
     - apt-get update && apt-get install -y cmake git python3
@@ -26,9 +26,56 @@ NVIDIA-RTX5080:
       cmake -S . -B build
       -DCMAKE_CXX_FLAGS="-Wall -Werror"
       -DCMAKE_CXX_STANDARD=20
-      -DKokkos_ARCH_BLACKWELL120=ON
+      -DKokkos_ARCH_HOPPER90=ON
       -DKokkos_ENABLE_OPENMP=ON
       -DKokkos_ENABLE_CUDA=ON
+      -DKokkos_ENABLE_COMPILER_WARNINGS=ON
+    - cmake --build build
+    - ctest --test-dir build --output-on-failure
+
+AMD-MI300A:
+  extends: .common-setup
+  tags: [uo-gpu, odyssey, amd-mi300]
+  image: rocm/dev-ubuntu-26.04:7.14.0-full
+  script:
+    - apt-get update && apt-get install -y cmake git
+    - export CMAKE_BUILD_PARALLEL_LEVEL=32
+    - export HSA_XNACK=1
+    - export KOKKOS_DEVICE_ID=4
+    - export LD_LIBRARY_PATH=/opt/rocm/lib:/opt/rocm/lib64:$LD_LIBRARY_PATH
+    - >
+      cmake -S . -B build
+      -DCMAKE_PREFIX_PATH=/opt/rocm-7.14.0
+      -DCMAKE_CXX_COMPILER=hipcc
+      -DCMAKE_CXX_FLAGS="-Wall -Werror"
+      -DCMAKE_CXX_STANDARD=20
+      -DKokkos_ARCH_AMD_GFX942_APU=ON
+      -DKokkos_ENABLE_OPENMP=ON
+      -DKokkos_ENABLE_HIP=ON
+      -DKokkos_ARCH_ZEN4=ON
+      -DKokkos_ENABLE_COMPILER_WARNINGS=ON
+    - cmake --build build
+    - ctest --test-dir build --output-on-failure
+
+INTEL-DATA-CENTER-MAX-1100:
+  extends: .common-setup
+  tags: [intel-data-center-max-1100]
+  image: intel/oneapi-basekit:2024.2.1-0-devel-ubuntu22.04
+  script:
+    - apt-get update && apt-get install -y git
+    - sycl-ls
+    - export ONEAPI_DEVICE_SELECTOR=level_zero:gpu
+    - export CMAKE_BUILD_PARALLEL_LEVEL=48
+    - >
+      cmake -S . -B build
+      -DCMAKE_PREFIX_PATH=/opt/rocm-7.14.0
+      -DCMAKE_CXX_COMPILER=icpx
+      -DCMAKE_CXX_FLAGS="-Wno-zero-length-array -Wno-pass-failed -Werror -fsycl-device-code-split=per_kernel -fp-model=precise"
+      -DCMAKE_EXE_LINKER_FLAGS="-fsycl -flink-huge-device-code"
+      -DCMAKE_CXX_STANDARD=20
+      -DKokkos_ARCH_INTEL_PVC=ON
+      -DKokkos_ENABLE_OPENMP=ON
+      -DKokkos_ENABLE_SYCL=ON
       -DKokkos_ENABLE_COMPILER_WARNINGS=ON
     - cmake --build build
     - ctest --test-dir build --output-on-failure
