@@ -7,14 +7,26 @@ on:
   pull_request:
 
 jobs:
-  deploy:
+  build:
+    name: Build
     runs-on: ubuntu-latest
     steps:
-      - name: Fire API Event
-        uses: digital-blueprint/gitlab-pipeline-trigger@v1
+      - name: Trigger accelerator builds
+        uses: ghcr.io/appleboy/gitlab-ci-action@v1.3.0
+        id: trigger
         with:
           host: 'https://gitlab.spack.io'
-          id: '115'
+          project_id: '115'
+          wait: true
+          interval: 60s
+
           ref: ${{ github.ref_name }}
           trigger_token: ${{ secrets.GITLAB_TRIGGER_TOKEN }}
           access_token: ${{ secrets.GITLAB_CI_READ_TOKEN }}
+
+      - name: print output
+        run: |
+          echo ${{ steps.trigger.outputs.id }}
+          echo ${{ steps.trigger.outputs.sha }}
+          echo ${{ steps.trigger.outputs.web_url }}
+          echo ${{ steps.trigger.outputs.status }}
