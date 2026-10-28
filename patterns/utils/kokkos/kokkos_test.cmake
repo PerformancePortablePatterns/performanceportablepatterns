@@ -1,7 +1,5 @@
 function(PerformancePortablePatterns_add_kokkos_test ROOT_NAME)
   cmake_parse_arguments(PARSE "" "" "HEADERS;INCLUDE_HEADERS;ARGS" ${ARGN})
-  verify_empty(PerformancePortablePatterns_add_kokkos_test
-               ${PARSE_UNPARSED_ARGUMENTS})
 
   set(Test_harness
       "${CMAKE_SOURCE_DIR}/patterns/utils/kokkos/kokkos_UnitTest_harness.cpp")
