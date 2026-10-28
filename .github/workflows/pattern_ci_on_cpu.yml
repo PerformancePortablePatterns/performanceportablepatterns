@@ -29,6 +29,7 @@ jobs:
 
       - name: Build and install kokkos
         working-directory: kokkos
+        shell: bash
         run: |
           cmake_args=(
             -S .
