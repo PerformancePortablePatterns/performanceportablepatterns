@@ -17,6 +17,10 @@ jobs:
         cmake_build_type: [Release]
         kokkos_backend: [SERIAL, OPENMP]
         stdcxx: [20]
+        include:
+          - cxx: "clang++"
+            clang_tidy_args: '"clang-tidy;-warnings-as-errors=*"'
+
     runs-on: ${{ matrix.arch == 'arm64' && 'ubuntu-24.04-arm' || 'ubuntu-latest' }}
     container:
       image: ghcr.io/kokkos/ci-containers/${{ matrix.distro }}
@@ -59,6 +63,7 @@ jobs:
             -D CMAKE_CXX_STANDARD=${{ matrix.stdcxx}}
             -D CMAKE_CXX_COMPILER=${{ matrix.CXX}}
             -D CMAKE_BUILD_TYPE=${{ matrix.cmake_build_type}}
+            -D CMAKE_CXX_CLANG_TIDY=${{ matrix.clang_tidy_args}}
           )
 
           cmake "${cmake_args[@]}"
