@@ -24,3 +24,9 @@ jobs:
           download_job_logs: 'true'  # Downloads raw console output text files for all jobs
           download_path: './gitlab-outputs' # The local directory on the GitHub runner to save files to
           verbose: 'true'
+
+      - name: Upload accelerator build logs as artifacts
+        uses: actions/upload-artifact@v4
+        with:
+          name: gitlab-job-logs
+          path: ./gitlab-output/job_*_build-code/job.log
