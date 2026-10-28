@@ -19,7 +19,7 @@ jobs:
         stdcxx: [20]
         include:
           - cxx: "clang++"
-            clang_tidy_args: ["clang-tidy;-warnings-as-errors=*;-extra-arg=-std=c++20"]
+            clang_tidy_args: '"clang-tidy;-warnings-as-errors=*"'
 
     runs-on: ${{ matrix.arch == 'arm64' && 'ubuntu-24.04-arm' || 'ubuntu-latest' }}
     container:
