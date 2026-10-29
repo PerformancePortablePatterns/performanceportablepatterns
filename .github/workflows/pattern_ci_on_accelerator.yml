@@ -43,4 +43,4 @@ jobs:
         uses: actions/upload-artifact@v4
         with:
           name: gitlab-job-logs
-          path: ./gitlab-output/*
+          path: ./gitlab-outputs/*
