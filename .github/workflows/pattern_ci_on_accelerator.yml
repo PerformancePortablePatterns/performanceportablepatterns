@@ -19,7 +19,7 @@ jobs:
 
       - name: Push branch to GitLab
         run: |
-          git push "https://oauth2:${{ secrets.GITLAB_SYNC_TOKEN }}@https://gitlab.spack.io/jbludau/performanceportablepatterns.github.io.git" HEAD:${{ github.head_name }}
+          git push "https://oauth2:${{ secrets.GITLAB_SYNC_TOKEN }}@gitlab.spack.io/jbludau/performanceportablepatterns.github.io.git" HEAD:${{ github.head_ref }}
 
       - name: Wait for GitLab to register the reference
         run: sleep 5
