@@ -6,6 +6,10 @@ workflow:
     - if: $CI_COMMIT_BRANCH == "main"
       auto_cancel:
         on_new_commit: none
+    # Do not trigger on push directly
+    - if: $CI_PIPELINE_SOURCE == "push"
+      when: never
+
     - when: always
 
 .common-setup:
