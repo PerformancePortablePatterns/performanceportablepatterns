@@ -19,7 +19,8 @@ jobs:
         stdcxx: [20]
         include:
           - cxx: "clang++"
-            clang_tidy_args: '"clang-tidy;-warnings-as-errors=*"'
+            clang_tidy_args: 'clang-tidy;-warnings-as-errors=*'
+            sanitizer_flags: '-fsanitize=address,undefined,leak'
 
     runs-on: ${{ matrix.arch == 'arm64' && 'ubuntu-24.04-arm' || 'ubuntu-latest' }}
     container:
@@ -59,11 +60,12 @@ jobs:
             -S .
             -B builddir
             -D CMAKE_PREFIX_PATH="$HOME/kokkos"
-            -D CMAKE_CXX_FLAGS="-Wall -Werror"
+            -D CMAKE_CXX_FLAGS="-Wall -Werror ${{matrix.sanitizer_flags}}"
             -D CMAKE_CXX_STANDARD=${{ matrix.stdcxx}}
             -D CMAKE_CXX_COMPILER=${{ matrix.CXX}}
             -D CMAKE_BUILD_TYPE=${{ matrix.cmake_build_type}}
-            -D CMAKE_CXX_CLANG_TIDY=${{ matrix.clang_tidy_args}}
+            -D CMAKE_CXX_CLANG_TIDY="${{ matrix.clang_tidy_args}}"
+            -D CMAKE_EXE_LINKER_FLAGS="${{ matrix.sanitizer_flags}}"
           )
 
           cmake "${cmake_args[@]}"
