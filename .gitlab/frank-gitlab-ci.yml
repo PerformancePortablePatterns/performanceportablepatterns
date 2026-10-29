@@ -58,7 +58,7 @@ AMD-MI300A:
     - echo "Build and install kokkos"
     - git clone https://github.com/kokkos/kokkos.git
     - >
-      cmake -S . -B build_kokkos
+      cmake -S kokkos -B build_kokkos
       -DCMAKE_PREFIX_PATH=/opt/rocm-7.14.0
       -DCMAKE_CXX_COMPILER=hipcc
       -DCMAKE_CXX_STANDARD=20
@@ -90,11 +90,12 @@ INTEL-DATA-CENTER-MAX-1100:
     - apt-get update && apt-get install -y git intel-ocloc
 
     - echo "Build and install kokkos"
+    - git clone https://github.com/kokkos/kokkos.git
     - sycl-ls
     - export ONEAPI_DEVICE_SELECTOR=level_zero:gpu
     - export CMAKE_BUILD_PARALLEL_LEVEL=48
     - >
-      cmake -S . -B build_kokkos
+      cmake -S kokkos -B build_kokkos
       -DCMAKE_CXX_COMPILER=icpx
       -DCMAKE_CXX_STANDARD=20
       -DKokkos_ARCH_INTEL_PVC=ON
