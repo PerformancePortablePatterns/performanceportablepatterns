@@ -67,7 +67,7 @@ AMD-MI300A:
 
     - echo "Build and test patterns"
     - export HSA_XNACK=1
-    - export KOKKOS_DEVICE_ID=4
+    - export KOKKOS_DEVICE_ID=2
     - export LD_LIBRARY_PATH=/opt/rocm/lib:/opt/rocm/lib64:$LD_LIBRARY_PATH
     - >
       cmake -S . -B build
@@ -80,10 +80,10 @@ AMD-MI300A:
 INTEL-DATA-CENTER-MAX-1100:
   extends: .common-setup
   tags: [intel-data-center-max-1100]
-  image: intel/oneapi-toolkit:latest
+  image: intel/oneapi:2026.2.0-devel-ubuntu26.04
   script:
     - echo "Install dependencies"
-    - apt-get update && apt-get install -y git cmake
+    - apt-get update && apt-get install -y git intel-ocloc
 
     - echo "Build and install kokkos"
     - sycl-ls
