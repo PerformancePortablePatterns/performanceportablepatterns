@@ -97,16 +97,20 @@ INTEL-DATA-CENTER-MAX-1100:
       -DKokkos_ENABLE_OPENMP=ON
       -DKokkos_ENABLE_SYCL=ON
       -DKokkos_ENABLE_COMPILER_WARNINGS=ON
+      -DCMAKE_EXE_LINKER_FLAGS='-fsycl -flink-huge-device-code'
+      -DCMAKE_CXX_FLAGS='-Wno-zero-length-array -Wno-pass-failed -Werror -fsycl-device-code-split=per_kernel -fp-model=precise'
     - cmake --build build_kokkos
     - cmake --install build_kokkos --prefix=$HOME/kokkos
 
     - echo "Build and test patterns"
     - sycl-ls
     - export ONEAPI_DEVICE_SELECTOR=level_zero:gpu
+    - export CLANG_TIDY_EXE=$(dirname $(which icpx))/compiler/clang-tidy
     - >
       cmake -S . -B build
       -DCMAKE_CXX_COMPILER=icpx
       -DCMAKE_CXX_FLAGS="-Wall -Werror"
       -DCMAKE_PREFIX_PATH="$HOME/kokkos"
+      -DCMAKE_CXX_CLANG_TIDY='${CLANG_TIDY_EXE}\;-warnings-as-errors=*\;--checks=-bugprone-reserved-identifier'
     - cmake --build build
     - ctest --test-dir build --output-on-failure
