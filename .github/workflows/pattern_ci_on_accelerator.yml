@@ -1,4 +1,5 @@
 name: Pattern CI on accelerator
+# Why do we have to do all this and not just use Webhooks: Gitlabs interface regexes one .git away in the url. since that is part of this repostitory name it will just lead to a non-existing url and I have not found a workaround
 
 on:
   push:
@@ -11,6 +12,18 @@ jobs:
     name: Trigger and monitor Gitlab CI
     runs-on: ubuntu-latest
     steps:
+      - name: Checkout code in the github runner
+        uses: actions/checkout@v4
+        with:
+          fetch-depth: 0 # Ensures all history/branches are pulled
+
+      - name: Push branch to GitLab
+        run: |
+          git push --force "https://oauth2:${{ secrets.GITLAB_SYNC_TOKEN }}@gitlab.spack.io/jbludau/performanceportablepatterns.github.io.git" HEAD:${{ github.head_ref }}
+
+      - name: Wait for GitLab to register the reference
+        run: sleep 5
+
       - name: Trigger accelerator builds
         uses: digital-blueprint/gitlab-pipeline-trigger-action@v1
         with:
@@ -18,7 +31,7 @@ jobs:
           id: ${{ secrets.GITLAB_PROJECT_ID }}
           ref: ${{ github.head_ref }}
           trigger_token: ${{ secrets.GITLAB_TRIGGER_TOKEN }}
-          access_token: ${{ secrets.GITLAB_CI_READ_TOKEN}}
+          access_token: ${{ secrets.GITLAB_SYNC_TOKEN}}
 
           # Polling & Artifact behavior
           download_job_logs: 'true'  # Downloads raw console output text files for all jobs
@@ -30,4 +43,4 @@ jobs:
         uses: actions/upload-artifact@v4
         with:
           name: gitlab-job-logs
-          path: ./gitlab-output/*
+          path: ./gitlab-outputs/*
